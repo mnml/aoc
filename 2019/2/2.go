@@ -13,25 +13,25 @@ func main() {
 
 	for n := 0; n <= 99; n++ {
 		for v := 0; v <= 99; v++ {
-			m := make([]int, len(split))
+			mem := make([]int, len(split))
 
 			for i, s := range split {
-				m[i], _ = strconv.Atoi(s)
+				mem[i], _ = strconv.Atoi(s)
 			}
 
-			m[1], m[2] = n, v
+			mem[1], mem[2] = n, v
 
-			for i := 0; i < len(m); i += 4 {
-				switch m[i] {
+			for i := 0; i < len(mem); i += 4 {
+				switch mem[i] {
 				case 1:
-					m[m[i+3]] = m[m[i+1]] + m[m[i+2]]
+					mem[mem[i+3]] = mem[mem[i+1]] + mem[mem[i+2]]
 				case 2:
-					m[m[i+3]] = m[m[i+1]] * m[m[i+2]]
+					mem[mem[i+3]] = mem[mem[i+1]] * mem[mem[i+2]]
 				case 99:
-					if m[0] == 19690720 {
+					if mem[0] == 19690720 {
 						fmt.Println(100*n + v)
 					}
-					i = len(m)
+					i = len(mem)
 				}
 			}
 		}

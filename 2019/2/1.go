@@ -10,23 +10,23 @@ import (
 func main() {
 	input, _ := ioutil.ReadFile("input.txt")
 	split := strings.Split(string(input), ",")
-	m := make([]int, len(split))
+	mem := make([]int, len(split))
 
 	for i, s := range split {
-		m[i], _ = strconv.Atoi(s)
+		mem[i], _ = strconv.Atoi(s)
 	}
 
-	m[1], m[2] = 12, 2
+	mem[1], mem[2] = 12, 2
 
-	for i := 0; i < len(m); i += 4 {
-		switch m[i] {
+	for i := 0; i < len(mem); i += 4 {
+		switch mem[i] {
 		case 1:
-			m[m[i+3]] = m[m[i+1]] + m[m[i+2]]
+			mem[mem[i+3]] = mem[mem[i+1]] + mem[mem[i+2]]
 		case 2:
-			m[m[i+3]] = m[m[i+1]] * m[m[i+2]]
+			mem[mem[i+3]] = mem[mem[i+1]] * mem[mem[i+2]]
 		case 99:
-			fmt.Println(m[0])
-			i = len(m)
+			fmt.Println(mem[0])
+			i = len(mem)
 		}
 	}
 }
