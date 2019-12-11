@@ -42,55 +42,55 @@ func main() {
 }
 
 func run(mem []int, in <-chan int, out chan<- int, wg *sync.WaitGroup) {
-	pc := 0
+	ip := 0
 
 	for {
-		ins := fmt.Sprintf("%05d", mem[pc])
+		ins := fmt.Sprintf("%05d", mem[ip])
 		op, _ := strconv.Atoi(ins[3:])
-		arg := func(i int) int {
+		par := func(i int) int {
 			if ins[3-i] == '0' {
-				return mem[mem[pc+i]]
+				return mem[mem[ip+i]]
 			}
-			return mem[pc+i]
+			return mem[ip+i]
 		}
 
 		switch op {
 		case 1:
-			mem[mem[pc+3]] = arg(1) + arg(2)
+			mem[mem[ip+3]] = par(1) + par(2)
 		case 2:
-			mem[mem[pc+3]] = arg(1) * arg(2)
+			mem[mem[ip+3]] = par(1) * par(2)
 		case 3:
-			mem[mem[pc+1]] = <-in
+			mem[mem[ip+1]] = <-in
 		case 4:
-			out <- arg(1)
+			out <- par(1)
 		case 5:
-			if arg(1) != 0 {
-				pc = arg(2)
+			if par(1) != 0 {
+				ip = par(2)
 				continue
 			}
 		case 6:
-			if arg(1) == 0 {
-				pc = arg(2)
+			if par(1) == 0 {
+				ip = par(2)
 				continue
 			}
 		case 7:
-			if arg(1) < arg(2) {
-				mem[mem[pc+3]] = 1
+			if par(1) < par(2) {
+				mem[mem[ip+3]] = 1
 			} else {
-				mem[mem[pc+3]] = 0
+				mem[mem[ip+3]] = 0
 			}
 		case 8:
-			if arg(1) == arg(2) {
-				mem[mem[pc+3]] = 1
+			if par(1) == par(2) {
+				mem[mem[ip+3]] = 1
 			} else {
-				mem[mem[pc+3]] = 0
+				mem[mem[ip+3]] = 0
 			}
 		case 99:
 			wg.Done()
 			return
 		}
 
-		pc += []int{1, 4, 4, 2, 2, 3, 3, 4, 4}[op]
+		ip += []int{1, 4, 4, 2, 2, 3, 3, 4, 4}[op]
 	}
 }
 
