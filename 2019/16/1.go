@@ -14,8 +14,8 @@ func main() {
 		output := ""
 		for i := range signal {
 			sum := 0
-			for j, c := range signal {
-				sum += int(c-'0') * []int{0, 1, 0, -1}[(j+1)/(i+1)%4]
+			for j, r := range signal {
+				sum += int(r-'0') * []int{0, 1, 0, -1}[(j+1)/(i+1)%4]
 			}
 			if sum < 0 {
 				sum = -sum
