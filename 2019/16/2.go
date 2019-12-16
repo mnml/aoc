@@ -13,8 +13,8 @@ func main() {
 	offset, _ := strconv.Atoi(signal[:7])
 	output := []int{}
 
-	for _, c := range signal[offset:] {
-		output = append(output, int(c-'0'))
+	for _, r := range signal[offset:] {
+		output = append(output, int(r-'0'))
 	}
 
 	for p := 0; p < 100; p++ {
@@ -25,8 +25,8 @@ func main() {
 		}
 	}
 
-	for _, c := range output[:8] {
-		fmt.Print(strconv.Itoa(c))
+	for _, i := range output[:8] {
+		fmt.Print(i)
 	}
 	fmt.Println()
 }
