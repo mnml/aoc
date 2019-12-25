@@ -10,25 +10,24 @@ import (
 func main() {
 	input, _ := ioutil.ReadFile("input.txt")
 	split := strings.Split(strings.TrimSpace(string(input)), ",")
-	mem := map[int]int64{}
-	ip := 0
-	rb := 0
+	mem := map[int]int{}
+	ip, rb := 0, 0
 
 	for i, s := range split {
-		mem[i], _ = strconv.ParseInt(s, 10, 0)
+		mem[i], _ = strconv.Atoi(s)
 	}
 
 	for {
 		ins := fmt.Sprintf("%05d", mem[ip])
 		op, _ := strconv.Atoi(ins[3:])
-		par := func(i int) (addr int) {
+		par := func(i int) int {
 			switch ins[3-i] {
 			case '1':
 				return ip + i
 			case '2':
-				return rb + int(mem[ip+i])
+				return rb + mem[ip+i]
 			default:
-				return int(mem[ip+i])
+				return mem[ip+i]
 			}
 		}
 
@@ -38,19 +37,19 @@ func main() {
 		case 2:
 			mem[par(3)] = mem[par(1)] * mem[par(2)]
 		case 3:
-			var i int64
+			var i int
 			fmt.Scan(&i)
 			mem[par(1)] = i
 		case 4:
 			fmt.Println(mem[par(1)])
 		case 5:
 			if mem[par(1)] != 0 {
-				ip = int(mem[par(2)])
+				ip = mem[par(2)]
 				continue
 			}
 		case 6:
 			if mem[par(1)] == 0 {
-				ip = int(mem[par(2)])
+				ip = mem[par(2)]
 				continue
 			}
 		case 7:
@@ -66,7 +65,7 @@ func main() {
 				mem[par(3)] = 0
 			}
 		case 9:
-			rb += int(mem[par(1)])
+			rb += mem[par(1)]
 		case 99:
 			return
 		}

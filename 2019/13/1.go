@@ -10,13 +10,13 @@ import (
 func main() {
 	input, _ := ioutil.ReadFile("input.txt")
 	split := strings.Split(strings.TrimSpace(string(input)), ",")
-	mem := map[int]int64{}
+	mem := map[int]int{}
 
 	for i, s := range split {
-		mem[i], _ = strconv.ParseInt(s, 10, 0)
+		mem[i], _ = strconv.Atoi(s)
 	}
 
-	in, out := make(chan int64, 1), make(chan int64)
+	in, out := make(chan int, 1), make(chan int)
 	go run(mem, in, out)
 	count := 0
 
@@ -30,21 +30,20 @@ func main() {
 	fmt.Println(count)
 }
 
-func run(mem map[int]int64, in <-chan int64, out chan<- int64) {
-	ip := 0
-	rb := 0
+func run(mem map[int]int, in <-chan int, out chan<- int) {
+	ip, rb := 0, 0
 
 	for {
 		ins := fmt.Sprintf("%05d", mem[ip])
 		op, _ := strconv.Atoi(ins[3:])
-		par := func(i int) (addr int) {
+		par := func(i int) int {
 			switch ins[3-i] {
 			case '1':
 				return ip + i
 			case '2':
-				return rb + int(mem[ip+i])
+				return rb + mem[ip+i]
 			default:
-				return int(mem[ip+i])
+				return mem[ip+i]
 			}
 		}
 
@@ -59,12 +58,12 @@ func run(mem map[int]int64, in <-chan int64, out chan<- int64) {
 			out <- mem[par(1)]
 		case 5:
 			if mem[par(1)] != 0 {
-				ip = int(mem[par(2)])
+				ip = mem[par(2)]
 				continue
 			}
 		case 6:
 			if mem[par(1)] == 0 {
-				ip = int(mem[par(2)])
+				ip = mem[par(2)]
 				continue
 			}
 		case 7:
@@ -80,7 +79,7 @@ func run(mem map[int]int64, in <-chan int64, out chan<- int64) {
 				mem[par(3)] = 0
 			}
 		case 9:
-			rb += int(mem[par(1)])
+			rb += mem[par(1)]
 		case 99:
 			close(out)
 			return
