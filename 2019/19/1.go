@@ -26,18 +26,16 @@ func main() {
 }
 
 func run(init map[int]int, in []int) (out []int) {
+	ip, rb := 0, 0
 	mem := map[int]int{}
 	for i, v := range init {
 		mem[i] = v
 	}
 
-	ip := 0
-	rb := 0
-
 	for {
 		ins := fmt.Sprintf("%05d", mem[ip])
 		op, _ := strconv.Atoi(ins[3:])
-		par := func(i int) (addr int) {
+		par := func(i int) int {
 			switch ins[3-i] {
 			case '1':
 				return ip + i

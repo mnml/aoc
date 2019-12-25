@@ -67,7 +67,7 @@ func run(init map[int]int, in <-chan int, out chan<- int) {
 	for {
 		ins := fmt.Sprintf("%05d", mem[ip])
 		op, _ := strconv.Atoi(ins[3:])
-		par := func(i int) (addr int) {
+		par := func(i int) int {
 			switch ins[3-i] {
 			case '1':
 				return ip + i
