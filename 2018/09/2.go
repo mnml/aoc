@@ -17,17 +17,13 @@ func main() {
 	max := 0
 	for i := 1; i <= nmarbles*100; i++ {
 		if i%23 == 0 {
-			marbles = marbles.Move(-8)
-			players[i%len(players)] += i + marbles.Next().Value.(int)
-			marbles.Unlink(1)
-			marbles = marbles.Next()
+			marbles = marbles.Move(-6)
+			players[i%len(players)] += i + marbles.Move(-2).Link(marbles).Value.(int)
 			if players[i%len(players)] > max {
 				max = players[i%len(players)]
 			}
 		} else {
-			marbles = marbles.Next()
-			marbles.Link(ring.New(1))
-			marbles = marbles.Next()
+			marbles = marbles.Next().Link(ring.New(1)).Prev()
 			marbles.Value = i
 		}
 		if i == nmarbles {
