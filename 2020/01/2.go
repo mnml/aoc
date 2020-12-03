@@ -11,7 +11,7 @@ func main() {
 	input, _ := ioutil.ReadFile("input.txt")
 
 	entries := []int{}
-	for _, s := range strings.Split(strings.TrimSpace(string(input)), "\n") {
+	for _, s := range strings.Fields(string(input)) {
 		i, _ := strconv.Atoi(s)
 		entries = append(entries, i)
 	}
