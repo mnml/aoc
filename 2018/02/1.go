@@ -10,7 +10,7 @@ func main() {
 	input, _ := ioutil.ReadFile("input.txt")
 
 	boxes := map[int]int{}
-	for _, s := range strings.Split(strings.TrimSpace(string(input)), "\n") {
+	for _, s := range strings.Fields(string(input)) {
 		count := map[rune]int{}
 		for _, r := range s {
 			count[r]++

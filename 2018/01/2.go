@@ -13,7 +13,7 @@ func main() {
 	total := 0
 	reached := map[int]struct{}{}
 	for {
-		for _, s := range strings.Split(strings.TrimSpace(string(input)), "\n") {
+		for _, s := range strings.Fields(string(input)) {
 			i, _ := strconv.Atoi(s)
 			total += i
 			if _, ok := reached[total]; ok {

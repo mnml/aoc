@@ -12,7 +12,7 @@ func main() {
 
 	grid := map[image.Point]rune{}
 	w, h := 0, 0
-	for y, s := range strings.Split(strings.TrimSpace(string(input)), "\n") {
+	for y, s := range strings.Fields(string(input)) {
 		for x, r := range s {
 			grid[image.Point{x, y}] = r
 		}
