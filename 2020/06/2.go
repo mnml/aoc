@@ -12,18 +12,16 @@ func main() {
 	part1, part2 := 0, 0
 	for _, s := range strings.Split(strings.TrimSpace(string(input)), "\n\n") {
 		yes := map[rune]int{}
-		for _, s := range strings.Fields(s) {
+		people := strings.Fields(s)
+		for _, s := range people {
 			for _, r := range s {
 				yes[r]++
+				if yes[r] == len(people) {
+					part2++
+				}
 			}
 		}
 		part1 += len(yes)
-
-		for _, v := range yes {
-			if v == len(strings.Fields(s)) {
-				part2++
-			}
-		}
 	}
 	fmt.Println(part1)
 	fmt.Println(part2)
