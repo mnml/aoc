@@ -20,31 +20,29 @@ func main() {
 		}
 	}
 
-	total := 0
-	for b := range bags {
-		if contains(bags, b, "shiny gold") {
-			total++
-		}
-	}
-	fmt.Println(total)
+	fmt.Println(len(parents(bags, "shiny gold")))
 	fmt.Println(count(bags, "shiny gold"))
 }
 
-func contains(bags map[string]map[string]int, out, in string) bool {
-	if _, ok := bags[out][in]; ok {
-		return true
-	}
-	for out := range bags[out] {
-		if contains(bags, out, in) {
-			return true
+func parents(bags map[string]map[string]int, bag string) map[string]struct{} {
+	set := map[string]struct{}{}
+	for out := range bags {
+		for in := range bags[out] {
+			if in == bag {
+				set[out] = struct{}{}
+				for b := range parents(bags, out) {
+					set[b] = struct{}{}
+				}
+				break
+			}
 		}
 	}
-	return false
+	return set
 }
 
 func count(bags map[string]map[string]int, bag string) (total int) {
-	for k, v := range bags[bag] {
-		total += v * (count(bags, k) + 1)
+	for b, c := range bags[bag] {
+		total += c * (count(bags, b) + 1)
 	}
 	return
 }
