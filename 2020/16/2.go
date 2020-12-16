@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"math/bits"
 	"strconv"
 	"strings"
 )
@@ -18,54 +19,44 @@ func main() {
 		fmt.Sscanf(rule[1], "%d-%d or %d-%d", &rules[rule[0]][0], &rules[rule[0]][1], &rules[rule[0]][2], &rules[rule[0]][3])
 	}
 
-	indices := map[string]map[int]struct{}{}
+	masks := map[string]uint{}
 	for k := range rules {
-		indices[k] = map[int]struct{}{}
-		for i := 0; i < len(rules); i++ {
-			indices[k][i] = struct{}{}
-		}
+		masks[k] = 1<<len(rules) - 1
 	}
 
 	part1 := 0
-tickets:
-	for _, s := range strings.Split(split[2], "\n")[1:] {
-	fields:
-		for _, s := range strings.Split(s, ",") {
-			n, _ := strconv.Atoi(s)
-			for _, v := range rules {
-				if n >= v[0] && n <= v[1] || n >= v[2] && n <= v[3] {
-					continue fields
-				}
-			}
-			part1 += n
-			continue tickets
-		}
+out:
+	for _, s := range strings.Fields(split[2])[2:] {
+		invalid := map[string]uint{}
 
 		for i, s := range strings.Split(s, ",") {
+			n, _ := strconv.Atoi(s)
 			for k, v := range rules {
-				if n, _ := strconv.Atoi(s); !(n >= v[0] && n <= v[1] || n >= v[2] && n <= v[3]) {
-					delete(indices[k], i)
+				if !(n >= v[0] && n <= v[1] || n >= v[2] && n <= v[3]) {
+					invalid[k] |= 1 << i
 				}
 			}
+
+			if len(invalid) == len(rules) {
+				part1 += n
+				continue out
+			}
+		}
+
+		for k, v := range invalid {
+			masks[k] &^= v
 		}
 	}
 	fmt.Println(part1)
 
 	part2 := 1
-	for len(indices) > 0 {
-		for k, v := range indices {
-			if len(v) != 1 {
-				continue
-			}
-
-			for i := range v {
-				for k := range indices {
-					delete(indices[k], i)
-				}
-				delete(indices, k)
+	for used := uint(0); used != 1<<len(rules)-1; {
+		for k := range masks {
+			if masks[k] &^= used; bits.OnesCount(masks[k]) == 1 {
+				used |= masks[k]
 
 				if strings.HasPrefix(k, "departure") {
-					n, _ := strconv.Atoi(strings.Split(strings.Split(split[1], "\n")[1], ",")[i])
+					n, _ := strconv.Atoi(strings.Split(strings.Fields(split[1])[2], ",")[bits.TrailingZeros(masks[k])])
 					part2 *= n
 				}
 			}
