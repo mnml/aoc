@@ -18,10 +18,12 @@ func (p Point) Add(q Point) Point {
 func main() {
 	input, _ := ioutil.ReadFile("input.txt")
 
-	grid := map[Point]rune{}
+	grid := map[Point]struct{}{}
 	for y, s := range strings.Fields(string(input)) {
 		for x, r := range s {
-			grid[Point{x, y}] = r
+			if r == '#' {
+				grid[Point{x, y}] = struct{}{}
+			}
 		}
 	}
 
@@ -29,38 +31,24 @@ func main() {
 	fmt.Println(run(grid, 4, 6))
 }
 
-func run(grid map[Point]rune, dim, cycles int) (sum int) {
-	delta := delta(dim)[1:]
-
+func run(grid map[Point]struct{}, dim, cycles int) int {
 	for i := 0; i < cycles; i++ {
+		neigh := map[Point]int{}
 		for p := range grid {
-			for _, d := range delta {
-				grid[p.Add(d)] = grid[p.Add(d)]
+			for _, d := range delta(dim)[1:] {
+				neigh[p.Add(d)]++
 			}
 		}
 
-		new := map[Point]rune{}
-		for p, r := range grid {
-			neigh := 0
-			for _, d := range delta {
-				if grid[p.Add(d)] == '#' {
-					neigh++
-				}
-			}
-
-			if r == '#' && neigh == 2 || neigh == 3 {
-				new[p] = '#'
+		new := map[Point]struct{}{}
+		for p, n := range neigh {
+			if _, ok := grid[p]; ok && n == 2 || n == 3 {
+				new[p] = struct{}{}
 			}
 		}
 		grid = new
 	}
-
-	for _, r := range grid {
-		if r == '#' {
-			sum++
-		}
-	}
-	return
+	return len(grid)
 }
 
 func delta(dim int) (ds []Point) {
