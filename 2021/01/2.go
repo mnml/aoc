@@ -17,13 +17,11 @@ func main() {
 	}
 
 	part1, part2 := 0, 0
-	for i := 1; i < len(depths); i++ {
-		if depths[i] > depths[i-1] {
+	for i := range depths {
+		if i >= 1 && depths[i] > depths[i-1] {
 			part1++
 		}
-
-		if i < len(depths)-2 &&
-			depths[i]+depths[i+1]+depths[i+2] > depths[i-1]+depths[i]+depths[i+1] {
+		if i >= 3 && depths[i] > depths[i-3] {
 			part2++
 		}
 	}
