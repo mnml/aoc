@@ -12,20 +12,19 @@ func main() {
 	fields := strings.Fields(string(input))
 
 	gamma, epsilon := "", ""
+	oxygen, co2 := fields, fields
 	for i := range fields[0] {
 		most, least := split(fields, i)
 		gamma += string(most[0][i])
 		epsilon += string(least[0][i])
-	}
 
-	oxygen, co2 := fields, fields
-	for i := 0; len(oxygen) > 1; i++ {
-		oxygen, _ = split(oxygen, i)
+		if len(oxygen) > 1 {
+			oxygen, _ = split(oxygen, i)
+		}
+		if len(co2) > 1 {
+			_, co2 = split(co2, i)
+		}
 	}
-	for i := 0; len(co2) > 1; i++ {
-		_, co2 = split(co2, i)
-	}
-
 	fmt.Println(bs2i(gamma) * bs2i(epsilon))
 	fmt.Println(bs2i(oxygen[0]) * bs2i(co2[0]))
 }
