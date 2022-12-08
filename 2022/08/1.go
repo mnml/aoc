@@ -18,18 +18,16 @@ func main() {
 	}
 
 	part1, part2 := 0, 0
-	for p := range trees {
+	for p, t := range trees {
 		vis, score := 0, 1
 
 		for _, d := range []image.Point{{0, -1}, {1, 0}, {0, 1}, {-1, 0}} {
-			for np, i := p.Add(d), 0; ; np, i = np.Add(d), i+1 {
-				if _, ok := trees[np]; !ok {
-					vis, score = 1, score*i
+			for i := 1; ; i++ {
+				if nt, ok := trees[p.Add(d.Mul(i))]; !ok {
+					vis, score = 1, score*(i-1)
 					break
-				}
-
-				if trees[np] >= trees[p] {
-					score *= i + 1
+				} else if nt >= t {
+					score *= i
 					break
 				}
 			}
