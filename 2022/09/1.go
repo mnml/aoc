@@ -9,7 +9,6 @@ import (
 
 func main() {
 	input, _ := os.ReadFile("input.txt")
-
 	dirs := map[rune]image.Point{'U': {0, -1}, 'R': {1, 0}, 'D': {0, 1}, 'L': {-1, 0}}
 	rope := make([]image.Point, 10)
 
@@ -23,10 +22,8 @@ func main() {
 			rope[0] = rope[0].Add(dirs[dir])
 
 			for i := 1; i < len(rope); i++ {
-				r := image.Rectangle{rope[i], rope[i-1]}
-
-				if r.Canon().Dx() > 1 || r.Canon().Dy() > 1 {
-					rope[i] = rope[i].Add(image.Point{sgn(r.Dx()), sgn(r.Dy())})
+				if d := rope[i-1].Sub(rope[i]); abs(d.X) > 1 || abs(d.Y) > 1 {
+					rope[i] = rope[i].Add(image.Point{sgn(d.X), sgn(d.Y)})
 				}
 			}
 
@@ -35,6 +32,13 @@ func main() {
 	}
 	fmt.Println(len(part1))
 	fmt.Println(len(part2))
+}
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
 
 func sgn(x int) int {
