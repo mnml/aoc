@@ -15,7 +15,7 @@ func main() {
 	part1, part2 := 0, ""
 
 	tick := func() {
-		part2 += map[bool]string{true: "#", false: "."}[c%w >= x-1 && c%w <= x+1]
+		part2 += map[bool]string{true: "██", false: "  "}[c%w >= x-1 && c%w <= x+1]
 		part2 += map[bool]string{true: "\n"}[c%w == w-1]
 		if c++; (c+w/2)%w == 0 {
 			part1 += c * x
