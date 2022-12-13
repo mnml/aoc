@@ -38,26 +38,18 @@ func main() {
 }
 
 func cmp(a, b any) int {
-	var as, bs []any
-	af, bf := false, false
+	as, aok := a.([]any)
+	bs, bok := b.([]any)
 
-	switch a.(type) {
-	case float64:
-		as, af = []any{a}, true
-	case []any, []float64:
-		as = a.([]any)
+	switch {
+	case !aok && !bok:
+		return int(a.(float64) - b.(float64))
+	case !aok:
+		as = []any{a}
+	case !bok:
+		bs = []any{b}
 	}
 
-	switch b.(type) {
-	case float64:
-		bs, bf = []any{b}, true
-	case []any, []float64:
-		bs = b.([]any)
-	}
-
-	if af && bf {
-		return int(as[0].(float64) - bs[0].(float64))
-	}
 	for i := 0; i < len(as) && i < len(bs); i++ {
 		if c := cmp(as[i], bs[i]); c != 0 {
 			return c
