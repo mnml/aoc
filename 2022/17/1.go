@@ -32,7 +32,7 @@ func main() {
 		return true
 	}
 
-	cache := map[[2]int][2]int{}
+	cache := map[[2]int][]int{}
 
 	height, jet := 0, 0
 	for i := 0; i < 1000000000000; i++ {
@@ -47,7 +47,7 @@ func main() {
 				break
 			}
 		}
-		cache[k] = [2]int{i, height}
+		cache[k] = []int{i, height}
 
 		rock := []image.Point{}
 		for _, p := range rocks[i%len(rocks)] {
