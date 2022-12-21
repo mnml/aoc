@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/ring"
 	"fmt"
 	"os"
 	"strconv"
@@ -10,45 +11,29 @@ import (
 func main() {
 	input, _ := os.ReadFile("input.txt")
 
-	vs := [][2]int{}
-	for i, s := range strings.Fields(string(input)) {
+	fmt.Println(mix(string(input), 1, 1))
+	fmt.Println(mix(string(input), 811589153, 10))
+}
+
+func mix(input string, key, times int) int {
+	split := strings.Fields(input)
+
+	r, idx, z := ring.New(len(split)), map[int]*ring.Ring{}, (*ring.Ring)(nil)
+	for i, s := range split {
 		v, _ := strconv.Atoi(s)
-		vs = append(vs, [2]int{i, v})
+		if v == 0 {
+			z = r
+		}
+		r.Value, idx[i], r = v*key, r, r.Next()
 	}
 
-	fmt.Println(mix(vs, 1, 1))
-	fmt.Println(mix(vs, 811589153, 10))
-}
-
-func mix(vs [][2]int, key, times int) int {
-	vs = append([][2]int(nil), vs...)
-	for i := range vs {
-		vs[i][1] *= key
-	}
-
-	for t := 0; t < times; t++ {
-		for i := 0; i < len(vs); i++ {
-			i := index(vs, func(v [2]int) bool { return v[0] == i })
-			v := vs[i]
-			vs = append(vs[:i], vs[i+1:]...)
-			i = mod(i+v[1], len(vs))
-			vs = append(vs[:i], append([][2]int{v}, vs[i:]...)...)
+	for i := 0; i < times; i++ {
+		for i := 0; i < len(idx); i++ {
+			r = idx[i].Prev()
+			c := r.Unlink(1)
+			r.Move(c.Value.(int) % (len(idx) - 1)).Link(c)
 		}
 	}
 
-	i := index(vs, func(v [2]int) bool { return v[1] == 0 })
-	return vs[mod(i+1000, len(vs))][1] + vs[mod(i+2000, len(vs))][1] + vs[mod(i+3000, len(vs))][1]
-}
-
-func index[T any](s []T, f func(T) bool) int {
-	for i, v := range s {
-		if f(v) {
-			return i
-		}
-	}
-	return -1
-}
-
-func mod(a, n int) int {
-	return (a%n + n) % n
+	return z.Move(1000).Value.(int) + z.Move(2000).Value.(int) + z.Move(3000).Value.(int)
 }
