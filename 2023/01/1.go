@@ -3,28 +3,22 @@ package main
 import (
 	"fmt"
 	"os"
-	"regexp"
-	"slices"
 	"strings"
 )
 
 func main() {
 	input, _ := os.ReadFile("input.txt")
-	nums := []string{"1", "2", "3", "4", "5", "6", "7", "8", "9",
-		"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
 
-	calc := func(nums []string) (result int) {
-		first := regexp.MustCompile(`(` + strings.Join(nums, "|") + `)`)
-		last := regexp.MustCompile(`.*` + first.String())
-
+	calc := func(r *strings.Replacer) (result int) {
 		for _, s := range strings.Fields(string(input)) {
-			result += 10 * (slices.Index(nums, first.FindStringSubmatch(s)[1])%9 + 1)
-			result += slices.Index(nums, last.FindStringSubmatch(s)[1])%9 + 1
+			s = r.Replace(r.Replace(s))
+			result += 10 * int(s[strings.IndexAny(s, "123456789")]-'0')
+			result += int(s[strings.LastIndexAny(s, "123456789")] - '0')
 		}
-
 		return
 	}
 
-	fmt.Println(calc(nums[:9]))
-	fmt.Println(calc(nums))
+	fmt.Println(calc(strings.NewReplacer()))
+	fmt.Println(calc(strings.NewReplacer("one", "o1e", "two", "t2o", "three", "t3e", "four",
+		"f4r", "five", "f5e", "six", "s6x", "seven", "s7n", "eight", "e8t", "nine", "n9e")))
 }
