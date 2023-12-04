@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"os"
 	"regexp"
 	"slices"
@@ -22,14 +21,13 @@ func main() {
 				matching++
 			}
 		}
-		part1 += int(math.Pow(2, float64(matching-1)))
+		part1 += 1 << matching >> 1
 
 		copies[i]++
-		part2++
 		for j := 1; j <= matching; j++ {
 			copies[i+j] += copies[i]
-			part2 += copies[i]
 		}
+		part2 += copies[i]
 	}
 	fmt.Println(part1)
 	fmt.Println(part2)
