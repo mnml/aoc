@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"os"
 	"slices"
-	"strconv"
 	"strings"
 )
 
@@ -26,7 +24,7 @@ func main() {
 
 	winnings := func(jokers bool) (w int) {
 		slices.SortFunc(hands, func(a, b Hand) int {
-			return rank(a.Cards, jokers) - rank(b.Cards, jokers)
+			return cmp(a.Cards, b.Cards, jokers)
 		})
 		for i, h := range hands {
 			w += (i + 1) * h.Bid
@@ -38,24 +36,26 @@ func main() {
 	fmt.Println(winnings(true))
 }
 
-func rank(cards string, jokers bool) int {
-	j, r := "J", "2031425364758697T8J9QAKBAC"
+func cmp(a, b string, jokers bool) int {
+	j, r := "J", "TAJBQCKDAE"
 	if jokers {
-		j, r = "23456789TQKA", "J02132435465768798T9QAKBAC"
+		j, r = "23456789TQKA", "TAJ0QCKDAE"
 	}
 
-	typ := 0
-	for _, j := range strings.Split(j, "") {
-		n, t := strings.ReplaceAll(cards, "J", j), 0
-		for _, s := range n {
-			t += strings.Count(n, string(s))
+	typ := func(cards string) string {
+		k := 0
+		for _, j := range strings.Split(j, "") {
+			n, t := strings.ReplaceAll(cards, "J", j), 0
+			for _, s := range n {
+				t += strings.Count(n, string(s))
+			}
+			k = slices.Max([]int{k, t})
 		}
-		typ = slices.Max([]int{typ, t})
+		return map[int]string{5: "0", 7: "1", 9: "2", 11: "3", 13: "4", 17: "5", 25: "6"}[k]
 	}
 
-	tie, _ := strconv.ParseInt(strings.NewReplacer(
-		strings.Split(r, "")...,
-	).Replace(cards), 13, strconv.IntSize)
-
-	return int(math.Pow(13, float64(len(cards))))*typ + int(tie)
+	return strings.Compare(
+		typ(a)+strings.NewReplacer(strings.Split(r, "")...).Replace(a),
+		typ(b)+strings.NewReplacer(strings.Split(r, "")...).Replace(b),
+	)
 }
