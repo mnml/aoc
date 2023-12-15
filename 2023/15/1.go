@@ -7,27 +7,23 @@ import (
 	"slices"
 )
 
-type Lens struct {
-	Label string
-	Focal int
-}
-
 func main() {
 	input, _ := os.ReadFile("input.txt")
 	re := regexp.MustCompile(`(\w+)([-=])(\d*)`)
 
 	part1, part2 := 0, 0
-	boxes := [256][]Lens{}
+	boxes, focal := [256][]string{}, map[string]int{}
 	for _, m := range re.FindAllStringSubmatch(string(input), -1) {
-		box := &boxes[hash(m[1])]
-		i := slices.IndexFunc(*box, func(l Lens) bool { return l.Label == m[1] })
+		h := hash(m[1])
+		i := slices.Index(boxes[h], m[1])
 
 		if m[2] == "-" && i != -1 {
-			*box = slices.Delete(*box, i, i+1)
-		} else if m[2] == "=" && i != -1 {
-			(*box)[i] = Lens{m[1], int(m[3][0] - '0')}
+			boxes[h] = slices.Delete(boxes[h], i, i+1)
 		} else if m[2] == "=" {
-			*box = append(*box, Lens{m[1], int(m[3][0] - '0')})
+			focal[m[1]] = int(m[3][0] - '0')
+			if i == -1 {
+				boxes[h] = append(boxes[h], m[1])
+			}
 		}
 
 		part1 += hash(m[0])
@@ -35,7 +31,7 @@ func main() {
 
 	for i, b := range boxes {
 		for j, l := range b {
-			part2 += (i + 1) * (j + 1) * l.Focal
+			part2 += (i + 1) * (j + 1) * focal[l]
 		}
 	}
 	fmt.Println(part1)
