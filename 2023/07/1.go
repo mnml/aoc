@@ -49,7 +49,7 @@ func cmp(a, b string, jokers bool) int {
 			for _, s := range n {
 				t += strings.Count(n, string(s))
 			}
-			k = slices.Max([]int{k, t})
+			k = max(k, t)
 		}
 		return map[int]string{5: "0", 7: "1", 9: "2", 11: "3", 13: "4", 17: "5", 25: "6"}[k]
 	}

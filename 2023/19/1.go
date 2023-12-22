@@ -6,7 +6,6 @@ import (
 	"maps"
 	"os"
 	"regexp"
-	"slices"
 	"strconv"
 	"strings"
 )
@@ -56,15 +55,11 @@ func main() {
 
 			switch r.Op {
 			case "<":
-				min := slices.Min([]int{next[r.Cat][1], r.Val - 1})
-				max := slices.Max([]int{next[r.Cat][0], r.Val})
-				next[r.Cat] = [2]int{next[r.Cat][0], min}
-				ranges[r.Cat] = [2]int{max, ranges[r.Cat][1]}
+				next[r.Cat] = [2]int{next[r.Cat][0], min(next[r.Cat][1], r.Val-1)}
+				ranges[r.Cat] = [2]int{max(next[r.Cat][0], r.Val), ranges[r.Cat][1]}
 			case ">":
-				min := slices.Min([]int{next[r.Cat][1], r.Val})
-				max := slices.Max([]int{next[r.Cat][0], r.Val + 1})
-				next[r.Cat] = [2]int{max, next[r.Cat][1]}
-				ranges[r.Cat] = [2]int{ranges[r.Cat][0], min}
+				next[r.Cat] = [2]int{max(next[r.Cat][0], r.Val+1), next[r.Cat][1]}
+				ranges[r.Cat] = [2]int{ranges[r.Cat][0], min(next[r.Cat][1], r.Val)}
 			}
 			c += comb(r.Next, next)
 		}

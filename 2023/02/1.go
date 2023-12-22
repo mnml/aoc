@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"regexp"
-	"slices"
 	"strconv"
 	"strings"
 )
@@ -15,17 +14,17 @@ func main() {
 
 	part1, part2 := 0, 0
 	for i, s := range strings.Split(strings.TrimSpace(string(input)), "\n") {
-		min := map[string]int{}
+		mins := map[string]int{}
 
 		for _, m := range re.FindAllStringSubmatch(s, -1) {
 			n, _ := strconv.Atoi(m[1])
-			min[m[2]] = slices.Max([]int{min[m[2]], n})
+			mins[m[2]] = max(mins[m[2]], n)
 		}
 
-		if min["red"] <= 12 && min["green"] <= 13 && min["blue"] <= 14 {
+		if mins["red"] <= 12 && mins["green"] <= 13 && mins["blue"] <= 14 {
 			part1 += i + 1
 		}
-		part2 += min["red"] * min["green"] * min["blue"]
+		part2 += mins["red"] * mins["green"] * mins["blue"]
 	}
 	fmt.Println(part1)
 	fmt.Println(part2)

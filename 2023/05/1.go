@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"slices"
 	"strings"
 )
 
@@ -40,10 +39,10 @@ func main() {
 
 	part1, part2 := math.MaxInt, math.MaxInt
 	for i, s := range seeds {
-		part1 = slices.Min([]int{part1, calc(s)})
+		part1 = min(part1, calc(s))
 		if i%2 == 0 {
 			for s := seeds[i]; s < seeds[i]+seeds[i+1]; s++ {
-				part2 = slices.Min([]int{part2, calc(s)})
+				part2 = min(part2, calc(s))
 			}
 		}
 	}
