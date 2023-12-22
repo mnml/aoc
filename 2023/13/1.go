@@ -29,7 +29,7 @@ func main() {
 
 func mirror(s []string, equal func([]string, []string) bool) int {
 	for i := 1; i < len(s); i++ {
-		l := slices.Min([]int{i, len(s) - i})
+		l := min(i, len(s)-i)
 		a, b := slices.Clone(s[i-l:i]), s[i:i+l]
 		slices.Reverse(a)
 		if equal(a, b) {

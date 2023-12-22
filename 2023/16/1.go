@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"image"
 	"os"
-	"slices"
 	"strings"
 )
 
@@ -68,7 +67,7 @@ func main() {
 
 	part2 := 0
 	for _, s := range border {
-		part2 = slices.Max([]int{part2, bfs(s)})
+		part2 = max(part2, bfs(s))
 	}
 	fmt.Println(part2)
 }
