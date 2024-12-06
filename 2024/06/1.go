@@ -20,14 +20,14 @@ func main() {
 		}
 	}
 
-	patrol := func(o image.Point) int {
+	patrol := func(o image.Point) map[image.Point]int {
 		delta := []image.Point{{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
 		p, d, seen := start, 0, map[image.Point]int{}
 		for {
 			if _, ok := grid[p]; !ok {
-				return len(seen)
+				return seen
 			} else if 1<<d&seen[p] != 0 {
-				return -1
+				return nil
 			}
 			seen[p] |= 1 << d
 			if n := p.Add(delta[d]); grid[n] == '#' || n == o {
@@ -38,12 +38,12 @@ func main() {
 		}
 	}
 
-	part2 := 0
-	for p := range grid {
-		if patrol(p) == -1 {
+	part1, part2 := patrol(image.Point{-1, -1}), 0
+	for p := range part1 {
+		if patrol(p) == nil {
 			part2++
 		}
 	}
-	fmt.Println(patrol(image.Point{-1, -1}))
+	fmt.Println(len(part1))
 	fmt.Println(part2)
 }
