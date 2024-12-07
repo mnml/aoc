@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"slices"
 	"strconv"
 	"strings"
 )
@@ -18,40 +17,28 @@ func main() {
 		test, _ := strconv.Atoi(s[0])
 		var numbers []int
 		json.Unmarshal([]byte("["+strings.ReplaceAll(s[1], " ", ",")+"]"), &numbers)
-
-		for _, op := range perm(3, len(numbers)-1) {
-			result := numbers[0]
-			for i, n := range numbers[1:] {
-				switch op[i] {
-				case 0:
-					result += n
-				case 1:
-					result *= n
-				case 2:
-					result, _ = strconv.Atoi(strconv.Itoa(result) + strconv.Itoa(n))
-				}
-			}
-			if result == test {
-				if !slices.Contains(op, 2) {
-					part1 += test
-				}
-				part2 += test
-				break
-			}
-		}
+		part1 += value(test, numbers, false)
+		part2 += value(test, numbers, true)
 	}
 	fmt.Println(part1)
 	fmt.Println(part2)
 }
 
-func perm(n, l int) (r [][]int) {
-	if l == 0 {
-		return [][]int{{}}
-	}
-	for _, p := range perm(n, l-1) {
-		for i := range n {
-			r = append(r, append([]int{i}, p...))
+func value(test int, ns []int, p2 bool) int {
+	if len(ns) == 1 {
+		if ns[0] == test {
+			return test
 		}
+		return 0
 	}
-	return r
+	if n := value(test, append([]int{ns[0] + ns[1]}, ns[2:]...), p2); n != 0 {
+		return n
+	}
+	if n := value(test, append([]int{ns[0] * ns[1]}, ns[2:]...), p2); n != 0 {
+		return n
+	}
+	if n, _ := strconv.Atoi(fmt.Sprintf("%d%d", ns[0], ns[1])); p2 {
+		return value(test, append([]int{n}, ns[2:]...), p2)
+	}
+	return 0
 }
