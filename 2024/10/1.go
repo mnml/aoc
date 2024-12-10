@@ -17,33 +17,30 @@ func main() {
 		}
 	}
 
-	bfs := func(all bool) (score int) {
-		for start := range grid {
-			if grid[start] != '0' {
-				continue
-			}
-
-			queue, seen := []image.Point{start}, map[image.Point]struct{}{start: {}}
-			for len(queue) > 0 {
-				p := queue[0]
-				queue = queue[1:]
-
-				if grid[p] == '9' {
-					score++
-					continue
-				}
-
-				for _, d := range []image.Point{{0, -1}, {1, 0}, {0, 1}, {-1, 0}} {
-					n := p.Add(d)
-					if _, ok := seen[n]; grid[n] == grid[p]+1 && (!ok || all) {
-						queue, seen[n] = append(queue, n), struct{}{}
-					}
-				}
-			}
+	part1, part2 := 0, 0
+	for p := range grid {
+		if grid[p] == '0' {
+			part1 += dfs(grid, p, map[image.Point]bool{})
+			part2 += dfs(grid, p, nil)
 		}
-		return score
 	}
+	fmt.Println(part1)
+	fmt.Println(part2)
+}
 
-	fmt.Println(bfs(false))
-	fmt.Println(bfs(true))
+func dfs(grid map[image.Point]rune, p image.Point, seen map[image.Point]bool) (score int) {
+	if grid[p] == '9' {
+		if seen[p] {
+			return 0
+		} else if seen != nil {
+			seen[p] = true
+		}
+		return 1
+	}
+	for _, d := range []image.Point{{0, -1}, {1, 0}, {0, 1}, {-1, 0}} {
+		if n := p.Add(d); grid[n] == grid[p]+1 {
+			score += dfs(grid, n, seen)
+		}
+	}
+	return score
 }
