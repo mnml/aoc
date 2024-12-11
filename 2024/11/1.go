@@ -11,7 +11,7 @@ func main() {
 	input, _ := os.ReadFile("input.txt")
 
 	stones := map[int]int{}
-	for _, s := range strings.Split(strings.TrimSpace(string(input)), " ") {
+	for _, s := range strings.Fields(string(input)) {
 		n, _ := strconv.Atoi(s)
 		stones[n]++
 	}

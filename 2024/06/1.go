@@ -11,7 +11,7 @@ func main() {
 	input, _ := os.ReadFile("input.txt")
 
 	grid, start := map[image.Point]rune{}, image.Point{}
-	for y, s := range strings.Split(strings.TrimSpace(string(input)), "\n") {
+	for y, s := range strings.Fields(string(input)) {
 		for x, r := range s {
 			if r == '^' {
 				start = image.Point{x, y}

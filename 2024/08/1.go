@@ -11,7 +11,7 @@ func main() {
 	input, _ := os.ReadFile("input.txt")
 
 	bounds, freq := map[image.Point]bool{}, map[rune][]image.Point{}
-	for y, s := range strings.Split(strings.TrimSpace(string(input)), "\n") {
+	for y, s := range strings.Fields(string(input)) {
 		for x, r := range s {
 			bounds[image.Point{x, y}] = true
 			if r != '.' {

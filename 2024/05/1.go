@@ -13,7 +13,7 @@ func main() {
 	split := strings.Split(strings.TrimSpace(string(input)), "\n\n")
 
 	cmp := func(a, b string) int {
-		for _, s := range strings.Split(split[0], "\n") {
+		for _, s := range strings.Fields(split[0]) {
 			if s := strings.Split(s, "|"); s[0] == a && s[1] == b {
 				return -1
 			}
@@ -22,7 +22,7 @@ func main() {
 	}
 
 	run := func(sorted bool) (r int) {
-		for _, s := range strings.Split(split[1], "\n") {
+		for _, s := range strings.Fields(split[1]) {
 			if s := strings.Split(s, ","); slices.IsSortedFunc(s, cmp) == sorted {
 				slices.SortFunc(s, cmp)
 				n, _ := strconv.Atoi(s[len(s)/2])
