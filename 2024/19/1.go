@@ -9,6 +9,7 @@ import (
 func main() {
 	input, _ := os.ReadFile("input.txt")
 	split := strings.Split(strings.TrimSpace(string(input)), "\n\n")
+	patterns := strings.Split(split[0], ", ")
 
 	var ways func(string) int
 	cache := map[string]int{}
@@ -22,7 +23,7 @@ func main() {
 		if design == "" {
 			return 1
 		}
-		for _, s := range strings.Split(split[0], ", ") {
+		for _, s := range patterns {
 			if strings.HasPrefix(design, s) {
 				n += ways(design[len(s):])
 			}
