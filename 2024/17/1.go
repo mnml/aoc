@@ -21,7 +21,7 @@ func main() {
 	json.Unmarshal([]byte("["+m[3]+"]"), &pgm)
 
 	out := fmt.Sprint(run(a, b, c, pgm))
-	fmt.Println(strings.Trim(strings.Replace(out, " ", ",", -1), "[]"))
+	fmt.Println(strings.Trim(strings.ReplaceAll(out, " ", ","), "[]"))
 
 	a = 0
 	for n := len(pgm) - 1; n >= 0; n-- {
@@ -35,19 +35,10 @@ func main() {
 
 func run(a, b, c int, pgm []int) (out []int) {
 	for ip := 0; ip < len(pgm); ip += 2 {
-		op, literal := pgm[ip], pgm[ip+1]
+		literal := pgm[ip+1]
+		combo := []int{0, 1, 2, 3, a, b, c}[literal]
 
-		combo := literal
-		switch combo {
-		case 4:
-			combo = a
-		case 5:
-			combo = b
-		case 6:
-			combo = c
-		}
-
-		switch op {
+		switch pgm[ip] {
 		case 0:
 			a >>= combo
 		case 1:
