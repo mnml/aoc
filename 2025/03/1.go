@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -12,23 +13,19 @@ func main() {
 
 	part1, part2 := 0, 0
 	for _, s := range strings.Fields(string(input)) {
-		part1 += jolts(s, 2)
-		part2 += jolts(s, 12)
+		part1 += joltage(s, 2)
+		part2 += joltage(s, 12)
 	}
 	fmt.Println(part1)
 	fmt.Println(part2)
 }
 
-func jolts(bank string, nbat int) int {
-	s, p := "", 0
-	for b := nbat; b > 0; b-- {
-		for i := p; i <= len(bank)-b; i++ {
-			if bank[i] > bank[p] {
-				p = i
-			}
-		}
-		s += string(bank[p])
-		p++
+func joltage(bank string, nbat int) int {
+	s := ""
+	for i, j := 0, len(bank)-nbat+1; j <= len(bank); i, j = i+1, j+1 {
+		bs := []byte(bank[i:j])
+		i += slices.Index(bs, slices.Max(bs))
+		s += string(bank[i])
 	}
 	n, _ := strconv.Atoi(s)
 	return n
