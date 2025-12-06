@@ -33,18 +33,10 @@ func main() {
 	}
 	fmt.Println(part1)
 
-	comp := [][2]int{ranges[0]}
-	for _, r := range ranges[1:] {
-		if last := &comp[len(comp)-1]; r[0] <= last[1] {
-			last[1] = max(last[1], r[1])
-		} else {
-			comp = append(comp, r)
-		}
-	}
-
-	part2 := 0
-	for _, r := range comp {
-		part2 += r[1] - r[0] + 1
+	part2, c := 0, 0
+	for _, r := range ranges {
+		part2 += max(c, r[1]+1) - max(c, r[0])
+		c = max(c, r[1]+1)
 	}
 	fmt.Println(part2)
 }
